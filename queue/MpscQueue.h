@@ -1,6 +1,6 @@
 
-#ifndef __MPSC_BOUNDED_QUEUE_INCLUDED__
-#define __MPSC_BOUNDED_QUEUE_INCLUDED__
+#ifndef __MPSC_BOUNDED_QUEUE_H__
+#define __MPSC_BOUNDED_QUEUE_H__
 
 #include <atomic>
 #include <assert.h>
