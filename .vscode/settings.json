@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "ratio": "cpp",
-        "iosfwd": "cpp"
+        "iosfwd": "cpp",
+        "functional": "cpp"
     }
 }

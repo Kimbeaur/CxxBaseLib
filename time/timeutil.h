@@ -1,54 +1,81 @@
 #ifndef _TIME_UTIL_
 #define _TIME_UTIL_
-
-#ifndef WIN32
 #include <sys/time.h>
-#else
-#include<ctime> 
-#endif
+#include <string.h>
 
 #include <string>
 
-namespace time_utils
+static uint64_t get_time_ms()
 {
-
-#ifndef WIN32
-
-	inline std::string NowtimeString()
-	{
-		time_t   time_;
-		struct   tm   *ptm;
-		time_    =   time(NULL);
-		ptm      =   localtime(&time_);
-		char temp[100] = {0};
-		snprintf(temp,sizeof(temp), "%Y-%m-%d %d:%d:%d",ptm->tm_year + 1900, ptm->tm_mon + 1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec);
-		std::string str;
-		str.assign(temp);
-		return str;
-	}
-
-#else
-	inline std::string NowtimeString()
-	{
-		std::time_t time_now = std::time(NULL);
-		tm* tm_now = localtime(&time_now);
-		char time_str[sizeof("yyyy-mm-dd hh:mm:ss")] = {0};
-		std::strftime(time_str, sizeof(time_str), "%Y-%m-%d %H:%M:%S", tm_now);
-		return time_str;
-	}
-
-	inline std::string FormatTimeString(unsigned __int64 time_stamp)
-	{
-		std::time_t time_then = time_stamp;
-		tm* tm_now = localtime(&time_then);
-		char time_str[sizeof("yyyy-mm-dd hh:mm:ss")] = {0};
-		std::strftime(time_str, sizeof(time_str), "%Y-%m-%d %H:%M:%S", tm_now);
-		return time_str;
-	}
-
-#endif
-
-	
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    return tv.tv_sec * 1000 + tv.tv_usec / 1000;
 }
+
+static uint64_t get_time_us()
+{
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    return tv.tv_sec * 1000000 + tv.tv_usec;
+}
+
+static std::string get_time_str_s(time_t time)
+{
+    struct tm tm_time;
+    localtime_r(&time, &tm_time);
+    char buf[64];
+    snprintf(buf, sizeof(buf), "%4d-%02d-%02d %02d:%02d:%02d", 
+             tm_time.tm_year + 1900,
+             tm_time.tm_mon + 1,
+             tm_time.tm_mday,
+             tm_time.tm_hour,
+             tm_time.tm_min,
+             tm_time.tm_sec);
+
+    return buf;
+} 
+
+static std::string get_time_day(time_t time)
+{
+    struct tm tm_time;
+    localtime_r(&time, &tm_time);
+    char buf[64];
+    snprintf(buf, 64, "%4d-%02d",
+             tm_time.tm_year + 1900,
+             tm_time.tm_mon + 1);
+
+    return buf;
+}
+
+static std::string get_time_str_s()
+{
+    return get_time_str_s(time(NULL));
+}
+
+static std::string get_time_str_ms(struct timeval& tv)
+{
+    struct tm tm_time;
+    localtime_r(&tv.tv_sec, &tm_time);
+    char buf[64];
+    snprintf(buf, sizeof(buf), "%4d-%02d-%02d %02d:%02d:%02d.%03d", 
+             tm_time.tm_year + 1900,
+             tm_time.tm_mon + 1,
+             tm_time.tm_mday,
+             tm_time.tm_hour,
+             tm_time.tm_min,
+             tm_time.tm_sec,
+             tv.tv_usec/1000);
+
+    return buf;
+}
+
+static std::string get_time_str_ms()
+{
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+
+    return get_time_str_ms(tv);
+}
+
 
 #endif 
