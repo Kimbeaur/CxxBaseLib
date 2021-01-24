@@ -1,5 +1,5 @@
 #include "Msg.hpp"
-#include "Queue.hpp"
+
 #include <atomic>
 
 namespace ThreadCom {
