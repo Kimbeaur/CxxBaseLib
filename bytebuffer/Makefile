@@ -41,7 +41,7 @@ MAKE   = make
 
 # !!!===
 # target executable file or .a or .so
-target = testmd5
+target = libbytebuf.a
 
 # !!!===
 # compile flags
